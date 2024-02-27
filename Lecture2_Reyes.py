@@ -30,3 +30,8 @@ print(abs(y))
 print(float(y))
 print(complex(y))
 print(dividend(y,x))
+
+# LISTS
+dog = ["golden retriever", "husky", "aspin"]
+print(dog)
+print(dog(0))
