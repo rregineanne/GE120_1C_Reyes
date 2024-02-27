@@ -4,14 +4,15 @@ Regine Ann Reyes
 February 27, 2024
 """
 
-dms = 118.42069
+# convert dd to dms
+dd = 118.42069
 # extract the degree part
-degree = int(dms)
+degree = int(dd)
 # print("degree:", degree)
 
 # extract the minutes
 # minutes = dms - degree
-minutes = (dms-degree) * 60
+minutes = (dd-degree) * 60
 
 minutes_whole = int(minutes)
 
@@ -22,6 +23,7 @@ seconds = (minutes - minutes_whole) * 60
 # print("seconds:", seconds)
 # print("dms:" + str(degree) + "-" + str(minutes_whole) + "-" + str(round(seconds,2)))
 
+# convert dms to dd
 # dms = 118-25-14.48
 dms = "118-25-14.48"
 values = dms.split("-")
