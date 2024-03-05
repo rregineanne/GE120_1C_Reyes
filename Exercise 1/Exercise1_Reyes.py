@@ -39,6 +39,7 @@ degrees = int(values[0])
 minutes = int(values[1])
 seconds = float(values[2])
 
+# decimal
 # get dd value by converting the minutes and seconds to decimal form
 dd = degrees + (minutes/60) + (seconds/3600)
 print("Decimal Degree Value:", round(dd,6))
