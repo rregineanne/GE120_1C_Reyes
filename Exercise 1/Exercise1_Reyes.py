@@ -6,7 +6,7 @@ February 27, 2024
 # PART 1: Convert DD to DMS
 
 # input a decimal degree value
-DD = float(input("Enter Decimal Degree (Ex. 118.42069): "))
+DD = float(input("Enter Decimal Degree Value (Ex. 118.42069): "))
 
 # extract the degree part
 degree = int(DD)
@@ -39,7 +39,6 @@ degrees = int(values[0])
 minutes = int(values[1])
 seconds = float(values[2])
 
-# decimal
 # get dd value by converting the minutes and seconds to decimal form
 dd = degrees + (minutes/60) + (seconds/3600)
 print("Decimal Degree Value:", round(dd,6))
