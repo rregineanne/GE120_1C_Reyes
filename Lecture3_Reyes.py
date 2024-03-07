@@ -47,9 +47,28 @@ dog ={
     "name": "Bogart",
     "age" : 2,
     "color" : "white"
-    "favorite_num" : 3,
-    1.113: 45 # pwede number as key (float or int)
+    "favorite_num" 
+    # 1.113: 45 # pwede number as key (float or int)
 }
-print(dog[1.113])
-print(dog.values()) # returns a list of values
-print(dog.keys()) # returns a list of keys
+# print(dog[1.113])
+#print(dog.values()) # returns a list of values
+# print(dog.keys()) # returns a list of keys
+
+grade = 70 ; favorite = True
+# if grade >= 92 :
+#    print("YAHOO")
+# elif grade >= 60 :
+#    print("NICE")
+# elif grade < 60 and favorite :
+#    print("PASANG AWA")
+# else:
+#    print("SAD")
+
+# LOOPS AND BREAK CONTINUE AND PASS
+
+
+for number in range(10):
+    if number == 5:
+        continue
+        print(number)
+
