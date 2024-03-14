@@ -30,7 +30,7 @@ while True :
             degrees, minutes, seconds = float(degrees), float(minutes), float(seconds)
             azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
 
-            # identify the bearing and orientation of the DD angle
+            # identify the bearing and orientation of the DMS angle
             # 1st - convert azimuth to bearing in DD, and  identify direction
             # 2nd - convert the DD angle from 1st to DMS
             if azimuth > 0 and azimuth < 90:
