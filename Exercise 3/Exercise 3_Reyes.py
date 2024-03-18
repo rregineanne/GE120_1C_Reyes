@@ -103,7 +103,8 @@ def AzimuthToBearing(azimuth) :
                     bearing = "DUE EAST"
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
-
+                return bearing, azimuth
+    
     else : # In DD form 
                 # Convert DD to DMS
                 azimuth = float(azimuth) 
@@ -157,7 +158,7 @@ def AzimuthToBearing(azimuth) :
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
     
-    return bearing
+                return bearing, azimuth
 
 # Create a sentinel controlled loop
 counter1 = 1
@@ -182,16 +183,26 @@ while True :
             azimuth = input("Enter Azimuth from the South: ")
 
         # Extract bearing, lat, and dep values
-        bearing = AzimuthToBearing(azimuth)
-        latitude = getLatitude(azimuth=float(azimuth), distance=float(distance_input)) 
-        departure = getDeparture(azimuth=float(azimuth), distance=float(distance_input))
+            bearing, azimuth = AzimuthToBearing(azimuth)
+            latitude = getLatitude(azimuth=float(azimuth), distance=float(distance_input)) 
+            departure = getDeparture(azimuth=float(azimuth), distance=float(distance_input))
 
         # Get summation of latitude and departure
         sumLat += latitude
             # sumLat = sumLat + Lat
         sumDep += departure
             # sumDep + sumDep + Dep
-        sumDist = float(distance_input)
+        sumDist += float(distance_input)
+        # Adjust the traverse 
+        constCorrLat = sumLat/sumDist
+        constCorrDep = sumDep/sumDist
+
+    #    for line in lines:
+    #    cLat = constCorrLat * line[1]
+    #    cDep = constCorrDep * line[1]
+
+    #    adjLat = line[3] + cLat
+    #    adjDep = line[4] + cDep
 
         line = (counter, distance_input, bearing, latitude, departure)  # Create tuple of the line
         lines.append(line)
@@ -212,14 +223,14 @@ while True :
                 break
 
 print()
-print("-------------------------------------------------------------------------------------")
-print('{: ^15} {: ^15} {: ^15} {: ^15} {: ^15}'.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE "))
-print("-------------------------------------------------------------------------------------")
+print("--------------------------------------------------------------------------------------------")
+print('{: ^15} {: ^15} {: ^15} {: ^20} {: ^20} '.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE "))
+print("--------------------------------------------------------------------------------------------")
 
 for line in lines:
-    print('{: ^13} {: ^16} {: ^16} {: ^18} {: ^18}'.format(line[0], line[1], line[2], line[3], line[4]))
+    print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20} '.format(line[0], line[1], line[2], line[3], line[4]))
 
-print("-------------------------------------------------------------------------------------")
+print("--------------------------------------------------------------------------------------------")
 print("Summation of Latitude: ", round(sumLat,6))
 print("Summation of Departure: ", round(sumDep,6))
 print("Summation of Distance: ", round(sumDist,3))
@@ -227,16 +238,7 @@ print("Summation of Distance: ", round(sumDist,3))
 LEC = sqrt(sumLat**2 + sumDep**2)
 print("LEC: ", LEC)
 REC = sumDist/LEC
-print("1: ", (REC)) # round off pa
+print("REC: 1: ", round(REC, -3)) # round off pa
 
-#constCorrLat = sumLat/sumDist
-#constCorrDep = sumDep/sumDist
-
-#for line in lines:
- #   corr_lat = constCorrLat * line[1]
-  #  corr_dep = constCorrDep * line[1]
-
-    # adjlat = line[3] + corr_lat
-    # adjdep = line[4] + corr_dep
 
 print("---------------------END-----------------------")

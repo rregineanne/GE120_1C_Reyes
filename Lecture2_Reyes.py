@@ -11,7 +11,7 @@ print(" Hello " + " GE120 ")
 print(type("STRING")) # string
 print(type(54)) # int
 print(type(3.1412526)) #float
-print(type(1+4j)) #
+print(type(1+4j)) # 
 
 # converting type data
 print(type(float(54)))
