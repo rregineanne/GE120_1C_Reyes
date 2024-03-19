@@ -169,7 +169,7 @@ sumLat = 0
 sumDep = 0
 sumDist = 0  
 sumAdjLat = 0
-sumAdjDep = 0 
+sumAdjDep = 0
 
 while True :
         print()
@@ -195,21 +195,8 @@ while True :
         sumDep += departure
             # sumDep + sumDep + Dep
         sumDist += float(distance_input)
-        # Adjust the traverse 
-        constCorrLat = sumLat/sumDist
-        constCorrDep = sumDep/sumDist
 
-        cLat = constCorrLat * float(distance_input)
-        cDep = constCorrDep * float(distance_input)
-
-        adjLat = latitude + cLat
-        adjDep = departure + cDep
-        
-        # Get summation of latitude and departure
-        sumAdjLat += adjLat
-        sumAdjDep += adjDep
-        
-        line = (counter, distance_input, bearing, latitude, departure, adjLat, adjDep)  # Create tuple of the line
+        line = (counter, distance_input, bearing, latitude, departure)  # Create tuple of the line
         lines.append(line)
 
         # Ask for input
@@ -223,14 +210,14 @@ while True :
                 break
 
 print()
-print("-----------------------------------------------------------------------------------------------------------------------------------------------")
-print('{: ^15} {: ^15} {: ^15} {: ^20} {: ^23} {: ^23} {: ^23} '.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
-print("-----------------------------------------------------------------------------------------------------------------------------------------------")
+print("--------------------------------------------------------------------------------------------")
+print('{: ^15} {: ^15} {: ^15} {: ^20} {: ^20} '.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE "))
+print("--------------------------------------------------------------------------------------------")
 
 for line in lines:
-    print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^23} {: ^23} {: ^23} '.format(line[0], line[1], line[2], line[3], line[4], line[5], line[6]))
+    print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20} '.format(line[0], line[1], line[2], line[3], line[4]))
 
-print("-----------------------------------------------------------------------------------------------------------------------------------------------")
+print("--------------------------------------------------------------------------------------------")
 print("Summation of Latitude: ", round(sumLat,6))
 print("Summation of Departure: ", round(sumDep,6))
 print("Summation of Distance: ", round(sumDist,3))
@@ -243,6 +230,30 @@ print("LEC: ", LEC)
 REC = sumDist/LEC
 print("REC: 1: ", round(REC, -3)) 
 
+# Adjust the traverse 
+constCorrLat = -sumLat/sumDist
+constCorrDep = -sumDep/sumDist
+
+for line in lines :
+    cLat = constCorrLat * line[1]
+    cDep = constCorrDep * line[1]
+
+    adjLat = line[3] + cLat
+    adjDep = line[4] + cDep
+
+print()
+print("--------------------------------------------------------------------------------------------")
+print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20}  '.format("LINE NO. ", "CLAT ", "CDEP ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
+print("--------------------------------------------------------------------------------------------")
+
+correction = (cLat, cDep, adjLat, adjDep)
+lines.append(correction)
+
+print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20} '.format(line[0], correction[0], correction[1], correction[2], correction[3]))
+print("--------------------------------------------------------------------------------------------")
+
+sumAdjLat += adjLat 
+sumAdjDep += adjDep
 
 
 print("---------------------END-----------------------")

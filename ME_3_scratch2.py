@@ -169,7 +169,7 @@ sumLat = 0
 sumDep = 0
 sumDist = 0  
 sumAdjLat = 0
-sumAdjDep = 0 
+sumAdjDep = 0
 
 while True :
         print()
@@ -196,19 +196,15 @@ while True :
             # sumDep + sumDep + Dep
         sumDist += float(distance_input)
         # Adjust the traverse 
-        constCorrLat = sumLat/sumDist
-        constCorrDep = sumDep/sumDist
+        constCorrLat = -sumLat/sumDist
+        constCorrDep = -sumDep/sumDist
 
         cLat = constCorrLat * float(distance_input)
         cDep = constCorrDep * float(distance_input)
 
         adjLat = latitude + cLat
         adjDep = departure + cDep
-        
-        # Get summation of latitude and departure
-        sumAdjLat += adjLat
-        sumAdjDep += adjDep
-        
+
         line = (counter, distance_input, bearing, latitude, departure, adjLat, adjDep)  # Create tuple of the line
         lines.append(line)
 
