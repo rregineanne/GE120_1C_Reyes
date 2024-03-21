@@ -55,6 +55,7 @@ def AzimuthToBearing(azimuth) :
                 degrees, minutes, seconds = azimuth.split("-")
                 degrees, minutes, seconds = float(degrees), float(minutes), float(seconds)
                 azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
+                azimuth_uncon = azimuth
 
                 # Identify the bearing and orientation of the DMS angle
                 # 1st - convert azimuth to bearing in DD, and  identify direction
@@ -103,13 +104,13 @@ def AzimuthToBearing(azimuth) :
                     bearing = "DUE EAST"
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
-                return bearing, azimuth
+                return bearing, azimuth, azimuth_uncon
     
     else : # In DD form 
                 # Convert DD to DMS
                 azimuth = float(azimuth) 
                 azimuth = (azimuth) % 360
-
+                azimuth_uncon = azimuth
                 # Identify the bearing and orientation of the DD angle
                 # 1st - convert azimuth to bearing in DD, and  identify direction
                 # 2nd - convert the DD angle from 1st to DMS
@@ -158,7 +159,7 @@ def AzimuthToBearing(azimuth) :
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
     
-                return bearing, azimuth
+                return bearing, azimuth, azimuth_uncon
 
 # Create a sentinel controlled loop
 counter1 = 1
@@ -185,9 +186,9 @@ while True :
             azimuth = input("Enter Azimuth from the South: ")
 
         # Extract bearing, lat, and dep values
-            bearing, azimuth = AzimuthToBearing(azimuth)
-            latitude = getLatitude(azimuth=float(azimuth), distance=float(distance_input)) 
-            departure = getDeparture(azimuth=float(azimuth), distance=float(distance_input))
+            bearing, azimuth, azimuth_uncon = AzimuthToBearing(azimuth)
+            latitude = getLatitude(azimuth=float(azimuth_uncon), distance=float(distance_input)) 
+            departure = getDeparture(azimuth=float(azimuth_uncon), distance=float(distance_input))
 
         # Get summation of latitude and departure
         sumLat += latitude
@@ -222,38 +223,37 @@ print("Summation of Latitude: ", round(sumLat,6))
 print("Summation of Departure: ", round(sumDep,6))
 print("Summation of Distance: ", round(sumDist,3))
 
-print("Summation of Adjusted Latitude: ", round(sumAdjLat,6))
-print("Summation of Adjusted Departure: ", round(sumAdjDep,6))
-
 LEC = sqrt(sumLat**2 + sumDep**2)
 print("LEC: ", LEC)
 REC = sumDist/LEC
 print("REC: 1: ", round(REC, -3)) 
 
 # Adjust the traverse 
-constCorrLat = -sumLat/sumDist
-constCorrDep = -sumDep/sumDist
+constCorrLat = sumLat/sumDist
+constCorrDep = sumDep/sumDist
 
-for line in lines :
-    cLat = constCorrLat * line[1]
-    cDep = constCorrDep * line[1]
+for correction in lines :
+    cLat = - constCorrLat * float(distance_input)
+    cDep = - constCorrDep * float(distance_input)
 
     adjLat = line[3] + cLat
     adjDep = line[4] + cDep
 
-print()
-print("--------------------------------------------------------------------------------------------")
-print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20}  '.format("LINE NO. ", "CLAT ", "CDEP ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
-print("--------------------------------------------------------------------------------------------")
-
 correction = (cLat, cDep, adjLat, adjDep)
 lines.append(correction)
 
-print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^20} '.format(line[0], correction[0], correction[1], correction[2], correction[3]))
-print("--------------------------------------------------------------------------------------------")
+print()
+print("-------------------------------------------------------------------------------------------------")
+print('{: ^13} {: ^20} {: ^20} {: ^20} {: ^20}  '.format("LINE NO. ", "CLAT ", "CDEP ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
+print("-------------------------------------------------------------------------------------------------")
+
+print('{: ^13} {: ^20} {: ^20} {: ^20} {: ^20} '.format(line[0], correction[0], correction[1], correction[2], correction[3]))
+print("-------------------------------------------------------------------------------------------------")
 
 sumAdjLat += adjLat 
 sumAdjDep += adjDep
+print("Summation of Adjusted Latitude: ", round(sumAdjLat,6))
+print("Summation of Adjusted Departure: ", round(sumAdjDep,6))
 
-
+print()
 print("---------------------END-----------------------")

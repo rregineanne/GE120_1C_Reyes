@@ -55,10 +55,12 @@ def AzimuthToBearing(azimuth) :
                 degrees, minutes, seconds = azimuth.split("-")
                 degrees, minutes, seconds = float(degrees), float(minutes), float(seconds)
                 azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
-
-                # Identify the bearing and orientation of the DMS angle
+                azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
+                """
+                Identify the bearing and orientation of the DMS angle
                 # 1st - convert azimuth to bearing in DD, and  identify direction
                 # 2nd - convert the DD angle from 1st to DMS
+                """
                 if azimuth > 0 and azimuth < 90:
                     degree = int(azimuth)
                     minutes = (azimuth - degree) * 60
@@ -103,16 +105,18 @@ def AzimuthToBearing(azimuth) :
                     bearing = "DUE EAST"
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
-                return bearing, azimuth
+                return bearing, azimuth, azimuth_uncon
     
     else : # In DD form 
                 # Convert DD to DMS
                 azimuth = float(azimuth) 
                 azimuth = (azimuth) % 360
-
-                # Identify the bearing and orientation of the DD angle
+                azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
+                """
+                Identify the bearing and orientation of the DD angle
                 # 1st - convert azimuth to bearing in DD, and  identify direction
                 # 2nd - convert the DD angle from 1st to DMS
+                """
                 if azimuth > 0 and azimuth < 90:
                     degree = int(azimuth)
                     minutes = (azimuth - degree) * 60
@@ -158,18 +162,20 @@ def AzimuthToBearing(azimuth) :
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
     
-                return bearing, azimuth
+                return bearing, azimuth, azimuth_uncon
 
 # Create a sentinel controlled loop
 counter1 = 1
 counter2 = 2
 counter = f"{counter1}-{counter2}"
 lines = []
+distance_list =[] #list of distance to be used for compass traverse adjustment
 sumLat = 0
 sumDep = 0
 sumDist = 0  
 sumAdjLat = 0
-sumAdjDep = 0 
+sumAdjDep = 0
+row = 0 # to be used in identifying the index of the distance in the distance_list 
 
 while True :
         print()
@@ -183,11 +189,11 @@ while True :
             print()
         else :
             azimuth = input("Enter Azimuth from the South: ")
-
+            distance_list.append(distance_input) # add the distance input of the user to the distance list
         # Extract bearing, lat, and dep values
-            bearing, azimuth = AzimuthToBearing(azimuth)
-            latitude = getLatitude(azimuth=float(azimuth), distance=float(distance_input)) 
-            departure = getDeparture(azimuth=float(azimuth), distance=float(distance_input))
+            bearing, azimuth, azimuth_uncon = AzimuthToBearing(azimuth)
+            latitude = getLatitude(azimuth=float(azimuth_uncon), distance=float(distance_input)) 
+            departure = getDeparture(azimuth=float(azimuth_uncon), distance=float(distance_input))
 
         # Get summation of latitude and departure
         sumLat += latitude
@@ -195,21 +201,8 @@ while True :
         sumDep += departure
             # sumDep + sumDep + Dep
         sumDist += float(distance_input)
-        # Adjust the traverse 
-        constCorrLat = sumLat/sumDist
-        constCorrDep = sumDep/sumDist
-
-        cLat = constCorrLat * float(distance_input)
-        cDep = constCorrDep * float(distance_input)
-
-        adjLat = latitude + cLat
-        adjDep = departure + cDep
         
-        # Get summation of latitude and departure
-        sumAdjLat += adjLat
-        sumAdjDep += adjDep
-        
-        line = (counter, distance_input, bearing, latitude, departure, adjLat, adjDep)  # Create tuple of the line
+        line = [counter, distance_input, bearing, latitude, departure]  # Create a list of the line
         lines.append(line)
 
         # Ask for input
@@ -222,6 +215,30 @@ while True :
         else:
                 break
 
+    # Adjust the traverse 
+for line in lines :
+    distance = distance_list[row]
+    # Solve for correction of latitude per row
+    cLat = - sumLat * (distance/sumDist)
+    cDep = - sumDep * (distance/sumDist)
+
+    # solve for adjusted latitude and departure
+    latitude = line[3]
+    departure = line[4]
+    adjLat = latitude + cLat
+    adjDep = departure + cDep
+        
+    # Get summation of latitude and departure
+    sumAdjLat += adjLat
+    sumAdjDep += adjDep
+    
+    adjLat = round(adjLat,7)
+    adjDep = round(adjDep,7)
+    # Add the adjusted latitude and departure to the table (append)
+    line.append(adjLat)
+    line.append(adjDep)
+    row += 1
+    tuple(line) # convert the list of line to a tuple
 print()
 print("-----------------------------------------------------------------------------------------------------------------------------------------------")
 print('{: ^15} {: ^15} {: ^15} {: ^20} {: ^23} {: ^23} {: ^23} '.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
@@ -231,18 +248,17 @@ for line in lines:
     print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^23} {: ^23} {: ^23} '.format(line[0], line[1], line[2], line[3], line[4], line[5], line[6]))
 
 print("-----------------------------------------------------------------------------------------------------------------------------------------------")
-print("Summation of Latitude: ", round(sumLat,6))
-print("Summation of Departure: ", round(sumDep,6))
+print("Summation of Latitude: ", round(sumLat,7))
+print("Summation of Departure: ", round(sumDep,7))
 print("Summation of Distance: ", round(sumDist,3))
 
-print("Summation of Adjusted Latitude: ", round(sumAdjLat,6))
-print("Summation of Adjusted Departure: ", round(sumAdjDep,6))
-
+print("Summation of Adjusted Latitude: ", round(sumAdjLat,7))
+print("Summation of Adjusted Departure: ", round(sumAdjDep,7))
+print()
 LEC = sqrt(sumLat**2 + sumDep**2)
 print("LEC: ", LEC)
 REC = sumDist/LEC
 print("REC: 1: ", round(REC, -3)) 
 
-
-
+print()
 print("---------------------END-----------------------")
