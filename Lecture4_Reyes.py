@@ -9,7 +9,7 @@ def shout(word1, word2) :
     print(word1+"!")
     print(word2+"...")
 
-shout("Mafe", "Omar")
+shout("M", "Omar")
 
 # FUNCTIONS: because the uphold the DRY principle (Don't repeat Yourself)
 
@@ -123,4 +123,5 @@ def getDirection(degrees):
 dms = "100-12-14"
 dd = convertDMStoDEG(dms)
 direction = getDirection(dd)
+print(direction)
 print(direction)
