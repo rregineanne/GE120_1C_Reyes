@@ -12,8 +12,7 @@ class Line:
           self.distance = distance
           self.azimuth = azimuth
 
-    def latitude(self):
-    # INSERT CODE FOR LAT HERE
+def latitude(self):
         '''
         Compute for latitude of a given line.
 
@@ -29,8 +28,7 @@ class Line:
 
         return latitude
     
-    def departure(self):
-    # INSERT
+def departure(self):
         '''
         Compute for departure of a given line.
 
@@ -46,8 +44,7 @@ class Line:
 
         return departure
 
-    def bearing(self): 
-    # INSERT      
+def bearing(self): 
         '''
         Compute for the DMS bearing of a given angle.
 
@@ -57,18 +54,23 @@ class Line:
         Output:
         bearing - string
         '''
-    if "-" in azimuth : # In DMS form
+        if "-" in azimuth : # In DMS form
                 # Convert DMS to DD
                 dms = azimuth
                 degrees, minutes, seconds = azimuth.split("-")
                 degrees, minutes, seconds = float(degrees), float(minutes), float(seconds)
                 azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
                 azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
-                """
+                '''
                 Identify the bearing and orientation of the DMS angle
-                # 1st - convert azimuth to bearing in DD, and  identify direction
-                # 2nd - convert the DD angle from 1st to DMS
-                """
+                Input :
+                azimuth - string
+                Steps:
+                # 1 - convert azimuth to bearing in DD, and  identify direction
+                # 2 - convert the DD angle from 1st to DMS
+                Output :
+                bearing - string
+                '''
                 if azimuth > 0 and azimuth < 90:
                     degree = int(azimuth)
                     minutes = (azimuth - degree) * 60
@@ -103,28 +105,24 @@ class Line:
                     seconds = round(float((minutes - minutes_whole) * 60),2)
                     dms = f"{degree}-{minutes_whole}-{seconds}"
                     bearing = 'S {: ^5} E'.format(dms)
-                elif azimuth == 0:
-                    bearing = "DUE SOUTH"
-                elif azimuth == 90:
-                    bearing = "DUE WEST"
-                elif azimuth == 180:
-                    bearing = "DUE NORTH"
-                elif azimuth == 270:
-                    bearing = "DUE EAST"
-                elif azimuth == 360:
-                    bearing = "DUE SOUTH"
+                
                 return bearing, azimuth, azimuth_uncon
     
-    else : # In DD form 
+        else : # In DD form 
                 # Convert DD to DMS
                 azimuth = float(azimuth) 
                 azimuth = (azimuth) % 360
                 azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
-                """
+                '''
                 Identify the bearing and orientation of the DD angle
-                # 1st - convert azimuth to bearing in DD, and  identify direction
-                # 2nd - convert the DD angle from 1st to DMS
-                """
+                Input :
+                azimuth - float
+                Steps:
+                # 1 - convert azimuth to bearing in DD, and  identify direction
+                # 2 - convert the DD angle from 1st to DMS
+                Output :
+                bearing - string
+                '''
                 if azimuth > 0 and azimuth < 90:
                     degree = int(azimuth)
                     minutes = (azimuth - degree) * 60
@@ -172,6 +170,23 @@ class Line:
     
                 return bearing, azimuth, azimuth_uncon
     
+class Cardinal(Line):
+    def __init__(self, distance, azimuth):
+          super().__init__(distance, azimuth)
+    
+    def bearing(self):
+        if azimuth == 0:
+            bearing = "DUE SOUTH"
+        elif azimuth == 90:
+            bearing = "DUE WEST"
+        elif azimuth == 180:
+            bearing = "DUE NORTH"
+        elif azimuth == 270:
+            bearing = "DUE EAST"
+        elif azimuth == 360:
+            bearing = "DUE SOUTH"
+            
+        return bearing
 
 # Create a sentinel controlled loop
 counter1 = 1
@@ -191,28 +206,29 @@ while True :
         print("LINE NO. ", counter)    
         # Ask for distance input
         try:
-            distance_input = float(input("Enter Distance: "))
+            distance = float(input("Enter Distance: "))
         # If distance is invalid, ask for input again
         except ValueError :
             print("INVALID: You need to enter a number.")
             print()
         else :
             azimuth = input("Enter Azimuth from the South: ")
-            distance_list.append(distance_input) # add the distance input of the user to the distance list
-        # Extract bearing, lat, and dep values
-            bearing, azimuth, azimuth_uncon = AzimuthToBearing(azimuth)
-            latitude = getLatitude(azimuth=float(azimuth_uncon), distance=float(distance_input)) 
-            departure = getDeparture(azimuth=float(azimuth_uncon), distance=float(distance_input))
+            distance_list.append(distance) # add the distance input of the user to the distance list
+        
+        if azimuth % 90 == 0:
+            line = Cardinal(distance, azimuth) 
+        else:
+            line = Line(distance,azimuth)
 
         # Get summation of latitude and departure
-        sumLat += latitude
+        sumLat += line.latitude
             # sumLat = sumLat + Lat
-        sumDep += departure
+        sumDep += line.departure
             # sumDep + sumDep + Dep
-        sumDist += float(distance_input)
+        sumDist += float(line.distance)
         
-        line = [counter, distance_input, bearing, latitude, departure]  # Create a list of the line
-        lines.append(line)
+        # line = [counter, distance_input, bearing, latitude, departure]  # Create a list of the line
+        lines.append((counter, line.distance, line.bearing(), line.latitude(), line.departure()))
 
         # Ask for input
         YN = input("Add new line? (Y/N) ")
