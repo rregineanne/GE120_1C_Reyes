@@ -8,11 +8,11 @@ from math import cos, sin, radians, sqrt
 # Get from Google
 
 class Line:
-     def __init__(self, distance, azimuth):
-          self.distance = distance
-          self.azimuth = azimuth
+    def __init__(self, distance, azimuth):
+        self.distance = distance
+        self.azimuth = azimuth
 
-def latitude(self):
+    def latitude(self):
         '''
         Compute for latitude of a given line.
 
@@ -24,11 +24,11 @@ def latitude(self):
         latutude - float
         '''
 
-        latitude = - distance * cos(radians(azimuth))
+        latitude = -float(self.distance) * cos(radians(self.azimuth))
 
         return latitude
     
-def departure(self):
+    def departure(self):
         '''
         Compute for departure of a given line.
 
@@ -40,11 +40,11 @@ def departure(self):
         departure - float
         '''
 
-        departure = - distance * sin(radians(azimuth))
+        departure = -float(self.distance) * sin(radians(self.azimuth))
 
         return departure
 
-def bearing(self): 
+    def bearing(self): 
         '''
         Compute for the DMS bearing of a given angle.
 
@@ -175,17 +175,16 @@ class Cardinal(Line):
           super().__init__(distance, azimuth)
     
     def bearing(self):
-        if azimuth == 0:
+        if self.azimuth == 0:
             bearing = "DUE SOUTH"
-        elif azimuth == 90:
+        elif self.azimuth == 90:
             bearing = "DUE WEST"
-        elif azimuth == 180:
+        elif self.azimuth == 180:
             bearing = "DUE NORTH"
-        elif azimuth == 270:
+        elif self.azimuth == 270:
             bearing = "DUE EAST"
-        elif azimuth == 360:
+        elif self.azimuth == 360:
             bearing = "DUE SOUTH"
-            
         return bearing
 
 # Create a sentinel controlled loop
@@ -213,8 +212,14 @@ while True :
             print()
         else :
             azimuth = input("Enter Azimuth from the South: ")
+            if "-" in azimuth : # In DMS form
+                    # Convert DMS to DD
+                    dms = azimuth
+                    degrees, minutes, seconds = azimuth.split("-")
+                    degrees, minutes, seconds = int(degrees), float(minutes), float(seconds)
+                    azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
             distance_list.append(distance) # add the distance input of the user to the distance list
-        
+
         if azimuth % 90 == 0:
             line = Cardinal(distance, azimuth) 
         else:
