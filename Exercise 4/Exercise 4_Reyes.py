@@ -54,10 +54,10 @@ class Line:
         Output:
         bearing - string
         '''
-        if "-" in azimuth : # In DMS form
+        if "-" in str(self.azimuth) : # In DMS form
                 # Convert DMS to DD
-                dms = azimuth
-                degrees, minutes, seconds = azimuth.split("-")
+                dms = self.azimuth
+                degrees, minutes, seconds = self.azimuth.split("-")
                 degrees, minutes, seconds = float(degrees), float(minutes), float(seconds)
                 azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
                 azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
@@ -106,11 +106,11 @@ class Line:
                     dms = f"{degree}-{minutes_whole}-{seconds}"
                     bearing = 'S {: ^5} E'.format(dms)
                 
-                return bearing, azimuth, azimuth_uncon
+                return bearing
     
         else : # In DD form 
                 # Convert DD to DMS
-                azimuth = float(azimuth) 
+                azimuth = float(self.azimuth) 
                 azimuth = (azimuth) % 360
                 azimuth_uncon = azimuth # make a variable of the unconverted azimuth for lat and dep
                 '''
@@ -168,7 +168,7 @@ class Line:
                 elif azimuth == 360:
                     bearing = "DUE SOUTH"
     
-                return bearing, azimuth, azimuth_uncon
+                return bearing
     
 class Cardinal(Line):
     def __init__(self, distance, azimuth):
@@ -220,20 +220,20 @@ while True :
                     azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
             distance_list.append(distance) # add the distance input of the user to the distance list
 
-        if azimuth % 90 == 0:
+        if float(azimuth) % 90 == 0:
             line = Cardinal(distance, azimuth) 
         else:
             line = Line(distance,azimuth)
 
         # Get summation of latitude and departure
-        sumLat += line.latitude
+        sumLat += line.latitude()
             # sumLat = sumLat + Lat
-        sumDep += line.departure
+        sumDep += line.departure()
             # sumDep + sumDep + Dep
         sumDist += float(line.distance)
         
-        # line = [counter, distance_input, bearing, latitude, departure]  # Create a list of the line
-        lines.append((counter, line.distance, line.bearing(), line.latitude(), line.departure()))
+        # Append the attributes under the cardinal to make the table
+        lines.append((counter, line.distance, line.bearing(), line.latitude(), line.departure(),))
 
         # Ask for input
         YN = input("Add new line? (Y/N) ")
@@ -257,7 +257,7 @@ for line in lines :
     departure = line[4]
     adjLat = latitude + cLat
     adjDep = departure + cDep
-        
+
     # Get summation of latitude and departure
     sumAdjLat += adjLat
     sumAdjDep += adjDep
@@ -265,15 +265,16 @@ for line in lines :
     adjLat = round(adjLat,7)
     adjDep = round(adjDep,7)
     # Add the adjusted latitude and departure to the table (append)
-    line.append(adjLat)
-    line.append(adjDep)
+    updated_line = line + (adjLat, adjDep)
+    lines[row] = updated_line
     row += 1
-    tuple(line) # convert the list of line to a tuple
+
 print()
 print("-----------------------------------------------------------------------------------------------------------------------------------------------")
 print('{: ^15} {: ^15} {: ^15} {: ^20} {: ^23} {: ^23} {: ^23} '.format("LINE NO. ", "DISTANCE ", "BEARING ", "LATITUDE ", "DEPARTURE ", "ADJUSTED LATITUDE ", "ADJUSTED DEPARTURE "))
 print("-----------------------------------------------------------------------------------------------------------------------------------------------")
 
+# Print the adjusted lines
 for line in lines:
     print('{: ^13} {: ^16} {: ^16} {: ^20} {: ^23} {: ^23} {: ^23} '.format(line[0], line[1], line[2], line[3], line[4], line[5], line[6]))
 
