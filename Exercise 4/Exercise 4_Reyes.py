@@ -266,7 +266,7 @@ for line in lines :
     adjDep = round(adjDep,7)
     # Add the adjusted latitude and departure to the table (append)
     updated_line = line + (adjLat, adjDep)
-    lines[row] = updated_line
+    lines[row] = updated_line # Update the lines list with the new tuple
     row += 1
 
 print()
