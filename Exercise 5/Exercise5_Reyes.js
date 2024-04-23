@@ -53,7 +53,7 @@ function AzimuthToBearing(azimuth) {
                 azimuth = (degrees+(minutes/60)+(seconds/3600)) % 360 
                 let azimuth_uncon = azimuth // make a variable of the unconverted azimuth for lat and dep
                 /*
-                Identif (y the bearing && orientation of the DMS angle
+                Identify the bearing and orientation of the DMS angle
                 // 1st - convert azimuth to bearing in DD, &&  identif (y direction
                 // 2nd - convert the DD angle from 1st to DMS
                 */
@@ -111,7 +111,7 @@ function AzimuthToBearing(azimuth) {
                 azimuth = (azimuth) % 360
                 let azimuth_uncon = azimuth // make a variable of the unconverted azimuth for lat and dep
                 /*
-                Identify the bearing && orientation of the DD angle
+                Identify the bearing and orientation of the DD angle
                 // 1st - convert azimuth to bearing in DD, and  identify direction
                 // 2nd - convert the DD angle from 1st to DMS
                 */
@@ -163,80 +163,80 @@ function AzimuthToBearing(azimuth) {
                 return [bearing, azimuth, azimuth_uncon]
 }
 
-//  Create a sentinel controlled loop
-counter1 = 1
-counter2 = 2
-counter = '${counter1}-${counter2}'
-var lines = []
-var distance_list =[] //list of distance to be used for compass traverse adjustment
-var sumLat = 0
-var sumDep = 0
-var sumDist = 0  
-var sumAdjLat = 0
-var sumAdjDep = 0
-var row = 0 // to be used in identif (ying the index of the distance in the distance_list 
+    //  Create a sentinel controlled loop
+    counter1 = 1
+    counter2 = 2
+    counter = '${counter1}-${counter2}'
+    var lines = []
+    var distance_list =[] //list of distance to be used for compass traverse adjustment
+    var sumLat = 0
+    var sumDep = 0
+    var sumDist = 0  
+    var sumAdjLat = 0
+    var sumAdjDep = 0
+    var row = 0 // to be used in identifying the index of the distance in the distance_list 
 
-//  Create a sentinel loop
-var data  = [
-[13.23, 124.795]
-[15.57, 14.143]
-[43.36, 270.000]
-[23.09, 188.169]
-[10.99, 180.000]
-[41.40, 50.562]
-]
+    //  Create a sentinel loop
+    var data  = [
+    [13.23, 124.795]
+    [15.57, 14.143]
+    [43.36, 270.000]
+    [23.09, 188.169]
+    [10.99, 180.000]
+    [41.40, 50.562]
+    ]
 
-for (var i = 0; i < data.length; i++) {
-    let line = data [i]
-    let distance = line[0]
-    let azimuth = line[1]
-    let bearing = AzimuthToBearing(azimuth)
-    let latitude = getLatitude(distance, azimuth)
-    let departure = getDeparture(distance, azimuth)
+    for (var i = 0; i < data.length; i++) {
+        let line = data [i]
+        let distance = line[0]
+        let azimuth = line[1]
+        let bearing = AzimuthToBearing(azimuth)
+        let latitude = getLatitude(distance, azimuth)
+        let departure = getDeparture(distance, azimuth)
 
-    // Get summation of latitude && departure
-    sumLat += latitude
-    // sumLat = sumLat + Lat
-    sumDep += departure
-    // sumDep + sumDep + Dep
-    sumDist += float(distance)
-
-    lines.push([(i+1), distance, bearing, latitude, departure])
-}
-    // Adjust the traverse 
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i]
-        let distance = distance_list[row]
-        // Solve for correction of latitude per row
-        let cLat = - sumLat * (distance/sumDist)
-        let cDep = - sumDep * (distance/sumDist)
-
-        // solve for adjusted latitude && departure
-        let latitude = line[3]
-        let departure = line[4]
-        let adjLat = latitude + cLat
-        let adjDep = departure + cDep
-            
         // Get summation of latitude && departure
-        sumAdjLat += adjLat
-        sumAdjDep += adjDep
-        
-        adjLat = (adjLat.toPrecision(5))
-        adjDep = (adjDep.toPrecision(5))
-        // Add the adjusted latitude && departure to the table (push)
-        line.push(adjLat)
-        line.push(adjDep)
-        row += 1
-}
+        sumLat += latitude
+        // sumLat = sumLat + Lat
+        sumDep += departure
+        // sumDep + sumDep + Dep
+        sumDist += float(distance)
 
-console.log()
-console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
-console.log("LINE NO. ".padEnd(15), "DISTANCE ".padEnd(15), "BEARING ".padEnd(15), "LATITUDE ".padEnd(15), "DEPARTURE ".padEnd(15), "ADJUSTED LATITUDE ".padEnd(15), "ADJUSTED DEPARTURE ".padEnd(15))
-console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
+        lines.push([(i+1), distance, bearing, latitude, departure])
+    }
+        // Adjust the traverse 
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i]
+            let distance = distance_list[row]
+            // Solve for correction of latitude per row
+            let cLat = - sumLat * (distance/sumDist)
+            let cDep = - sumDep * (distance/sumDist)
 
-for (var line of lines) {
-    console.log(line[0].toString().padEnd(13), line[1].toString().padEnd(16), line[2].toString().padEnd(16), line[3].toString().padEnd(20), line[4].toString().padEnd(23), line[5].toString().padEnd(23), line[6].toString().padEnd(23))
-}
+            // solve for adjusted latitude and departure
+            let latitude = line[3]
+            let departure = line[4]
+            let adjLat = latitude + cLat
+            let adjDep = departure + cDep
+                
+            // Get summation of latitude && departure
+            sumAdjLat += adjLat
+            sumAdjDep += adjDep
+            
+            adjLat = (adjLat.toPrecision(5))
+            adjDep = (adjDep.toPrecision(5))
+            // Add the adjusted latitude && departure to the table (push)
+            line.push(adjLat)
+            line.push(adjDep)
+            row += 1
+    }
+
+    console.log()
+    console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
+    console.log("LINE NO. ".padEnd(15), "DISTANCE ".padEnd(15), "BEARING ".padEnd(15), "LATITUDE ".padEnd(15), "DEPARTURE ".padEnd(15), "ADJUSTED LATITUDE ".padEnd(15), "ADJUSTED DEPARTURE ".padEnd(15))
+    console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
+
+    for (var line of lines) {
+        console.log(line[0].toString().padEnd(13), line[1].toString().padEnd(16), line[2].toString().padEnd(16), line[3].toString().padEnd(20), line[4].toString().padEnd(23), line[5].toString().padEnd(23), line[6].toString().padEnd(23))
+    }
 
 console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
 console.log("Summation of Latitude{ ", sumLat.toPrecision(5))
