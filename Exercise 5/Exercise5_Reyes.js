@@ -9,11 +9,11 @@ function getLatitude(distance,azimuth) {
     /*
     Compute for latitude of a given line.
 
-    Input {
+    Input 
     distance - float
     azimuth - float
 
-    Output{
+    Output
     latutude - float
     */
     if (azimuth % 180 == 90) {return 0} else {    
@@ -24,11 +24,11 @@ function getDeparture(distance, azimuth) {
     /*
     Compute for departure of a given line.
 
-    Input {
+    Input 
     distance - float
     azimuth - float
 
-    Output{
+    Output
     departure - float
     */
     if (azimuth & 180 == 0) {return 0} else {

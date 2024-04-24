@@ -1,4 +1,4 @@
-*
+/*
 GE 120 Machine Exercise 3
 Regine Ann Reyes
 March 14, 2024
@@ -39,18 +39,9 @@ function getDeparture(distance, azimuth) {
         return (-distance * Math.sin(azimuth * Math.PI / 180.0));
     }
 }
-
 function AzimuthToBearing(azimuth) {
-    let bearing, azimuth_uncon;
-    /*
-        Compute for the DMS bearing of a given angle.
+    let bearing, azimuth_uncon, degree;
 
-        Input {
-        azimuth - float
-
-        Output{
-        bearing - string
-        */
     if (String(azimuth).includes("-")) { // In DMS form
         // Convert DMS to DD
         let dms = azimuth;
@@ -63,40 +54,40 @@ function AzimuthToBearing(azimuth) {
 
         // Identify the bearing and orientation of the DMS angle
         if (azimuth > 0 && azimuth < 90) {
-            let degree = Math.floor(azimuth);
+            degree = Math.floor(azimuth);
             let minutes = (azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = S ${dms} W;
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'S ${dms} W';
         } else if (azimuth >= 90 && azimuth < 180) {
-            let degree = Math.floor(180 - azimuth);
+            degree = Math.floor(180 - azimuth);
             let minutes = (180 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = N ${dms} W;
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'N ${dms} W';
         } else if (azimuth >= 180 && azimuth < 270) {
-            let degree = Math.floor(azimuth - 180);
+            degree = Math.floor(azimuth - 180);
             let minutes = (azimuth - 180 - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = N ${dms} E;
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'N ${dms} E';
         } else if (azimuth >= 270 && azimuth < 360) {
-            let degree = Math.floor(360 - azimuth);
+            degree = Math.floor(360 - azimuth);
             let minutes = (360 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = S ${dms} E;
-        } else if (azimuth == 0 || azimuth == 360) {
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'S ${dms} E';
+        } else if (azimuth === 0 || azimuth === 360) {
             bearing = "DUE SOUTH";
-        } else if (azimuth == 90) {
+        } else if (azimuth === 90) {
             bearing = "DUE WEST";
-        } else if (azimuth == 180) {
+        } else if (azimuth === 180) {
             bearing = "DUE NORTH";
-        } else if (azimuth == 270) {
+        } else if (azimuth === 270) {
             bearing = "DUE EAST";
         }
     } else { // In DD form
@@ -105,40 +96,40 @@ function AzimuthToBearing(azimuth) {
 
         // Identify the bearing and orientation of the DD angle
         if (azimuth > 0 && azimuth < 90) {
-            let degree = Math.floor(azimuth);
+            degree = Math.floor(azimuth);
             let minutes = (azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = S ${dms} W;
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'S ${dms} W';
         } else if (azimuth >= 90 && azimuth < 180) {
-            let degree = Math.floor(180 - azimuth);
+            degree = Math.floor(180 - azimuth);
             let minutes = (180 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = N ${dms} W;
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'N ${dms} W';
         } else if (azimuth >= 180 && azimuth < 270) {
-            let degree = Math.floor(azimuth - 180);
+            degree = Math.floor(azimuth - 180);
             let minutes = (azimuth - 180 - degree) * 60;
             let minutes_whole = Math.floor(minutes);
-            let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = N ${dms} E;
+            let seconds = (parseFloat((minutes - minutes_whole) * 60).toPrecision(2));
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'N ${dms} E';
         } else if (azimuth >= 270 && azimuth < 360) {
-            let degree = Math.floor(360 - azimuth);
+            degree = Math.floor(360 - azimuth);
             let minutes = (360 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
-            let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            let dms = ${degree}-${minutes_whole}-${seconds}; // Following the JavaScript for string interpolation
-            bearing = S ${dms} E;
-        } else if (azimuth == 0 || azimuth == 360) {
+            let seconds = (parseFloat((minutes - minutes_whole) * 60).toPrecision(2));
+            dms = '${degree}-${minutes_whole}-${seconds}';
+            bearing = 'S ${dms} E';
+        } else if (azimuth === 0 || azimuth === 360) {
             bearing = "DUE SOUTH";
-        } else if (azimuth == 90) {
+        } else if (azimuth === 90) {
             bearing = "DUE WEST";
-        } else if (azimuth == 180) {
+        } else if (azimuth === 180) {
             bearing = "DUE NORTH";
-        } else if (azimuth == 270) {
+        } else if (azimuth === 270) {
             bearing = "DUE EAST";
         }
     }
@@ -147,10 +138,11 @@ function AzimuthToBearing(azimuth) {
     return [bearing, azimuth, azimuth_uncon];
 }
 
+
 // Create a sentinel controlled loop
 let counter1 = 1;
 let counter2 = 2;
-let counter = ${counter1}-${counter2};
+let counter = '${counter1}-${counter2}';
 let lines = [];
 let distance_list = []; //list of distance to be used for compass traverse adjustment
 let sumLat = 0;
@@ -221,15 +213,14 @@ for (var line of lines) {
 }
 
 console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
-console.log("Summation of Latitude{ ", sumLat.toPrecision(5))
-console.log("Summation of Departure{ ", sumDep.toPrecision(5))
-console.log("Summation of Distance{ ", sumDist.toPrecision(5))
+console.log("Summation of Latitude: ", sumLat.toPrecision(5))
+console.log("Summation of Departure: ", sumDep.toPrecision(5))
+console.log("Summation of Distance: ", sumDist.toPrecision(5))
 
-console.log("Summation of Adjusted Latitude{ ", sumAdjLat.toPrecision(5))
-console.log("Summation of Adjusted Departure{ ", sumAdjDep.toPrecision(5))
+console.log("Summation of Adjusted Latitude: ", sumAdjLat.toPrecision(5))
+console.log("Summation of Adjusted Departure: ", sumAdjDep.toPrecision(5))
 console.log()
-let LEC = Math.sqrt(sumLat * 2 + sumDep * 2);
+let LEC = Math.sqrt(sumLat ** 2 + sumDep ** 2);
 console.log("LEC: ", LEC);
 let REC = sumDist / LEC;
-console.log("1: ", (Math.floor(REC / 1000) * 1000).toPrecision(-3));
-Write to Ian Arvisu
+console.log("1: ", Math.floor(REC / 1000) * 1000);
