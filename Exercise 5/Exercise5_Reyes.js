@@ -1,5 +1,5 @@
 /*
-GE 120{ Machine Exercise 3
+GE 120 Machine Exercise 3
 Regine Ann Reyes
 March 14, 2024
 */
@@ -104,7 +104,7 @@ function AzimuthToBearing(azimuth) {
                     bearing = "DUE SOUTH"
                 return bearing, azimuth, azimuth_uncon
                 
-                return [bearing, azimuth, azimuth_uncon]}
+}
     
     else { // In DD form 
                 // Convert DD to DMS
@@ -179,12 +179,12 @@ function AzimuthToBearing(azimuth) {
 
 //  Create a sentinel loop
 var data  = [
-[13.23, 124.795]
-[15.57, 14.143]
-[43.36, 270.000]
-[23.09, 188.169]
-[10.99, 180.000]
-[41.40, 50.562]
+    [13.23, 124.795],
+    [15.57, 14.143],
+    [43.36, 270.000],
+    [23.09, 188.169],
+    [10.99, 180.000],
+    [41.40, 50.562]
 ]
 
 for (var i = 0; i < data.length; i++) {
