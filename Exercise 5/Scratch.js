@@ -183,8 +183,8 @@ for (let i = 0; i < lines.length; i++) {
     // solve for adjusted latitude and departure
     let latitude = line[3];
     let departure = line[4];
-    let adjLat = parseFloat((latitude + cLat).toPrecision(5));
-    let adjDep = parseFloat((departure + cDep).toPrecision(5));
+    let adjLat = parseFloat((latitude + cLat).toPrecision(10));
+    let adjDep = parseFloat((departure + cDep).toPrecision(10));
 
     // Get summation of latitude && departure
     sumAdjLat += adjLat;
@@ -193,14 +193,6 @@ for (let i = 0; i < lines.length; i++) {
     // Add the adjusted latitude && departure to the table (push)
     line.push(adjLat);
     line.push(adjDep);
-}
-const tolerance = 0.0001
-if (Math.abs(sumAdjLat) < tolerance) {
-    sumAdjLat = 0;
-}
-
-if (Math.abs(sumAdjDep) < tolerance) {
-    sumAdjDep = 0;
 }
 
 console.log()
