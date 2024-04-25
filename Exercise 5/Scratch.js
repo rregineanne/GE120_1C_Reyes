@@ -131,7 +131,7 @@ function AzimuthToBearing(azimuth) {
     }
 
     // Return bearing and unconverted azimuth
-    return [bearing, azimuth, azimuth_uncon];
+    return bearing;
 }
 
 
@@ -170,13 +170,12 @@ for (let i = 0; i < data.length; i++) {
     sumDep += departure;
     sumDist += parseFloat(distance);
 
-    lines.push([(i + 1), distance, bearing, latitude, departure]);
+    lines.push([i + 1, distance, bearing, latitude, departure]);
 }
-
 // Adjust the traverse 
 for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    let distance = distance_list[row];
+    let distance = line[1]; // Use distance from the data
     // Solve for correction of latitude per row
     let cLat = -sumLat * (distance / sumDist);
     let cDep = -sumDep * (distance / sumDist);
@@ -184,19 +183,24 @@ for (let i = 0; i < lines.length; i++) {
     // solve for adjusted latitude and departure
     let latitude = line[3];
     let departure = line[4];
-    let adjLat = latitude + cLat;
-    let adjDep = departure + cDep;
+    let adjLat = parseFloat((latitude + cLat).toPrecision(5));
+    let adjDep = parseFloat((departure + cDep).toPrecision(5));
 
     // Get summation of latitude && departure
     sumAdjLat += adjLat;
     sumAdjDep += adjDep;
 
-    adjLat = (adjLat.toPrecision(5));
-    adjDep = (adjDep.toPrecision(5));
     // Add the adjusted latitude && departure to the table (push)
     line.push(adjLat);
     line.push(adjDep);
-    row += 1;
+}
+const tolerance = 0.0001
+if (Math.abs(sumAdjLat) < tolerance) {
+    sumAdjLat = 0;
+}
+
+if (Math.abs(sumAdjDep) < tolerance) {
+    sumAdjDep = 0;
 }
 
 console.log()
