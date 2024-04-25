@@ -40,15 +40,11 @@ function getDeparture(distance, azimuth) {
     }
 }
 function AzimuthToBearing(azimuth) {
-    let bearing, azimuth_uncon, degree;
+    let bearing, azimuth_uncon, degree, dms;
 
     if (String(azimuth).includes("-")) { // In DMS form
         // Convert DMS to DD
-        let dms = azimuth;
-        let [degrees, minutes, seconds] = azimuth.split("-");
-        degrees = parseFloat(degrees);
-        minutes = parseFloat(minutes);
-        seconds = parseFloat(seconds);
+        let [degrees, minutes, seconds] = azimuth.split("-").map(parseFloat);
         azimuth = (degrees + (minutes / 60) + (seconds / 3600)) % 360;
         azimuth_uncon = azimuth;
 
@@ -58,29 +54,29 @@ function AzimuthToBearing(azimuth) {
             let minutes = (azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'S ${dms} W';
+            dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "S"+dms+"W";
         } else if (azimuth >= 90 && azimuth < 180) {
             degree = Math.floor(180 - azimuth);
             let minutes = (180 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'N ${dms} W';
+            dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "N"+dms+"W";
         } else if (azimuth >= 180 && azimuth < 270) {
             degree = Math.floor(azimuth - 180);
             let minutes = (azimuth - 180 - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'N ${dms} E';
+            dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "N"+dms+"E";
         } else if (azimuth >= 270 && azimuth < 360) {
             degree = Math.floor(360 - azimuth);
             let minutes = (360 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'S ${dms} E';
+            dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "S"+dms+"E";
         } else if (azimuth === 0 || azimuth === 360) {
             bearing = "DUE SOUTH";
         } else if (azimuth === 90) {
@@ -100,29 +96,29 @@ function AzimuthToBearing(azimuth) {
             let minutes = (azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'S ${dms} W';
+            let dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "S"+dms+"W";
         } else if (azimuth >= 90 && azimuth < 180) {
             degree = Math.floor(180 - azimuth);
             let minutes = (180 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = parseFloat(((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'N ${dms} W';
+            let dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "N"+dms+"W";
         } else if (azimuth >= 180 && azimuth < 270) {
             degree = Math.floor(azimuth - 180);
             let minutes = (azimuth - 180 - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = (parseFloat((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'N ${dms} E';
+            let dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "N"+dms+"E";
         } else if (azimuth >= 270 && azimuth < 360) {
             degree = Math.floor(360 - azimuth);
             let minutes = (360 - azimuth - degree) * 60;
             let minutes_whole = Math.floor(minutes);
             let seconds = (parseFloat((minutes - minutes_whole) * 60).toPrecision(2));
-            dms = '${degree}-${minutes_whole}-${seconds}';
-            bearing = 'S ${dms} E';
+            let dms = degree+"-"+minutes_whole+"-"+seconds; 
+            bearing = "S"+dms+"E";
         } else if (azimuth === 0 || azimuth === 360) {
             bearing = "DUE SOUTH";
         } else if (azimuth === 90) {
@@ -205,11 +201,11 @@ for (let i = 0; i < lines.length; i++) {
 
 console.log()
 console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
-console.log("LINE NO. ".padEnd(15), "DISTANCE ".padEnd(15), "BEARING ".padEnd(15), "LATITUDE ".padEnd(15), "DEPARTURE ".padEnd(15), "ADJUSTED LATITUDE ".padEnd(20), "ADJUSTED DEPARTURE ".padEnd(15))
+console.log("LINE NO. ".padEnd(15), "DISTANCE ".padEnd(15), "BEARING ".padEnd(15), "LATITUDE ".padEnd(20), "DEPARTURE ".padEnd(22), "ADJUSTED LATITUDE ".padEnd(22), "ADJUSTED DEPARTURE ".padEnd(22))
 console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
 
 for (var line of lines) {
-    console.log(line[0].toString().padEnd(13), line[1].toString().padEnd(16), line[2].toString().padEnd(16), line[3].toString().padEnd(16), line[4].toString().padEnd(16), line[5].toString().padEnd(23), line[6].toString().padEnd(23))
+    console.log(line[0].toString().padEnd(15), line[1].toString().padEnd(16), line[2].toString().padEnd(16), line[3].toString().padEnd(20), line[4].toString().padEnd(22), line[5].toString().padEnd(22), line[6].toString().padEnd(22))
 }
 
 console.log("-----------------------------------------------------------------------------------------------------------------------------------------------")
