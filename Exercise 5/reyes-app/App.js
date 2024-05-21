@@ -3,7 +3,8 @@ GE 120: Machine Exercise 6
 Regine Ann Reyes
 May 21, 2024
 
-Disclaimer: It works on IOS Expo Go.
+Disclaimer: It works on IOS Expo Go. It works with the command 'npx expo start go' after 'npx expo run:ios'. Please do not mind other
+reyes-app file or exercise 6 folder. This is also placed inside exercise 5 folder. 
 */
 import React from 'react';
 import { Image } from 'expo-image';
