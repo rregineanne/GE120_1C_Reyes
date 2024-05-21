@@ -213,3 +213,5 @@ const styles = StyleSheet.create({
   
     },
   });
+
+  // in a sense, this should look like a converter app on the phone when connected through expo go. the code for the conversion of azimuth to bearing should work though.
