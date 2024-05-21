@@ -52,7 +52,7 @@ export default function App() {
     }
   }
 
-  return (
+  return ( // create a box for each element to be added in the app interface
     <View style={styles.box}>
       <View style={styles.box1}>
         <Text style={styles.titleText}>Welcome to DD to DMS Calculator</Text>
