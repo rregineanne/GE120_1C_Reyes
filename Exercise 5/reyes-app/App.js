@@ -2,6 +2,8 @@
 GE 120: Machine Exercise 6
 Regine Ann Reyes
 May 21, 2024
+
+Disclaimer: It works on IOS Expo Go.
 */
 import React from 'react';
 import { Image } from 'expo-image';
