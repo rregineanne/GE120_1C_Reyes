@@ -31,7 +31,7 @@ export default function App() {
       var minutes = Math.floor((value - degrees) * 60);
       var seconds = Math.round((value - degrees - (minutes / 60)) * 3600);
       
-      var output = degree.toString().concat("-",minutes.toString(),"-", seconds.toString())
+      var output = degrees.toString().concat("-",minutes.toString(),"-", seconds.toString())
       setOutputValue(output);
     } else { // Case 2 converts degree, minutes, and seconds to decimal degree
       var parts = value.split('-');
